@@ -72,7 +72,7 @@ def get_items(curr_dir, args):
 
 def main(args):
     args.moving = False
-    device = torch.device('cuda') if args.use_cuda else torch.device('cpu')
+    device = torch.device('cuda:%d' % args.use_cuda) if args.use_cuda >= 0 else torch.device('cpu')
 
     args.device = device
     model = CoSNetwork(n_audio_channels=args.n_channels)
@@ -230,8 +230,8 @@ if __name__ == '__main__':
     parser.add_argument('--sr', type=int, default=22050, help="Sampling rate")
     parser.add_argument('--n_channels', type=int, default=2,
                         help="Number of channels")
-    parser.add_argument('--use_cuda', dest='use_cuda', action='store_true',
-                        help="Whether to use cuda")
+    parser.add_argument('--use_cuda', default=-1, type=int
+                        help="ID of the CUDA GPU to use. Default means no GPU.")
     parser.add_argument('--debug', action='store_true', help="Save outputs")
     parser.add_argument('--mic_radius', default=.0725, type=float,
                         help="To do")
